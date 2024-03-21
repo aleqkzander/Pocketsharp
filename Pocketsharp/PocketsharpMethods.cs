@@ -4,6 +4,7 @@
  */
 
 using PocketsharpObjects;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace Pocketsharp
@@ -100,26 +101,28 @@ namespace Pocketsharp
         /// <param name="newPassword">User's new password (required only if changing password)</param>
         /// <param name="passwordConfirm">Confirmation of user's new password (required only if changing password)</param>
         /// <returns>An AuthRecord object representing the updated user</returns>
-        public static async Task<AuthRecord?> UpdateUserAsync(HttpClient client, AuthRecord record, string? password = null, string? newPassword = null, string? passwordConfirm = null)
+        public static async Task<AuthRecord?> UpdateUserAsync(HttpClient client, AuthResponse authResponse, string ? oldPaddword = null, string? password = null, string? passwordConfirm = null)
         {
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (string.IsNullOrEmpty(record.Email)) return null;
+                if (authResponse == null) return null;
 
-                string apiEndpoint = $"/api/collections/users/records/{record.Id}";
+                string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
                 var requestBody = new
                 {
-                    record.Username,
-                    record.Email,
-                    record.EmailVisibility,
-                    record.Name,
-                    record.Avatar,
+                    authResponse.Record.Username,
+                    authResponse.Record.Email,
+                    authResponse.Record.EmailVisibility,
+                    authResponse.Record.Name,
+                    authResponse.Record.Avatar,
+                    oldPaddword,
                     password,
-                    newPassword,
                     passwordConfirm
                 };
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
 
                 var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
 
@@ -140,12 +143,14 @@ namespace Pocketsharp
         /// <param name="client">The HttpClient instance with the base URL set</param>
         /// <param name="recordId">The ID of the user record to delete</param>
         /// <returns>True if deletion is successful, otherwise false</returns>
-        public static async Task<bool> DeleteUserAsync(HttpClient client, string recordId)
+        public static async Task<bool> DeleteUserAsync(HttpClient client,string recordId, string token)
         {
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return false;
                 string apiEndpoint = $"/api/collections/users/records/{recordId}";
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
                 var response = await client.DeleteAsync(apiEndpoint);
                 return response.IsSuccessStatusCode;
             }

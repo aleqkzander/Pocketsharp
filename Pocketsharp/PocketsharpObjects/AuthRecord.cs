@@ -6,19 +6,19 @@ namespace PocketsharpObjects
     public class AuthRecord
     {
         [JsonPropertyName("id")]
-        public string? Id { get; private set; }
+        public string? Id { get; set; }
 
         [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; private set; }
+        public string? CollectionId { get; set; }
 
         [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; private set; }
+        public string? CollectionName { get; set; }
 
         [JsonPropertyName("username")]
         public string? Username { get; set; }
 
         [JsonPropertyName("verified")]
-        public bool? Verified { get; private set; }
+        public bool? Verified { get; set; }
 
         [JsonPropertyName("emailVisibility")]
         public bool? EmailVisibility { get; set; }
@@ -28,11 +28,11 @@ namespace PocketsharpObjects
 
         [JsonPropertyName("created")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Created { get; private set; }
+        public DateTime? Created { get; set; }
 
         [JsonPropertyName("updated")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Updated { get; private set; }
+        public DateTime? Updated { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
