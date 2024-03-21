@@ -8,7 +8,7 @@ using System.Net.Http.Json;
 
 namespace Pocketsharp
 {
-    public class PocketsharpAuthentication
+    public class PocketsharpMethods
     {
         /// <summary>
         /// Register a new user and return an AuthRecord object on success
@@ -88,6 +88,70 @@ namespace Pocketsharp
             catch
             {
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Update a user's information and return an updated AuthRecord object on success
+        /// </summary>
+        /// <param name="client">The HttpClient instance with the base URL set</param>
+        /// <param name="record">The updated user record</param>
+        /// <param name="password">User's current password (required only if changing password)</param>
+        /// <param name="newPassword">User's new password (required only if changing password)</param>
+        /// <param name="passwordConfirm">Confirmation of user's new password (required only if changing password)</param>
+        /// <returns>An AuthRecord object representing the updated user</returns>
+        public static async Task<AuthRecord?> UpdateUserAsync(HttpClient client, AuthRecord record, string? password = null, string? newPassword = null, string? passwordConfirm = null)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
+                if (string.IsNullOrEmpty(record.Email)) return null;
+
+                string apiEndpoint = $"/api/collections/users/records/{record.Id}";
+
+                var requestBody = new
+                {
+                    record.Username,
+                    record.Email,
+                    record.EmailVisibility,
+                    record.Name,
+                    record.Avatar,
+                    password,
+                    newPassword,
+                    passwordConfirm
+                };
+
+                var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<AuthRecord>();
+
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Delete a user record by ID
+        /// </summary>
+        /// <param name="client">The HttpClient instance with the base URL set</param>
+        /// <param name="recordId">The ID of the user record to delete</param>
+        /// <returns>True if deletion is successful, otherwise false</returns>
+        public static async Task<bool> DeleteUserAsync(HttpClient client, string recordId)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return false;
+                string apiEndpoint = $"/api/collections/users/records/{recordId}";
+                var response = await client.DeleteAsync(apiEndpoint);
+                return response.IsSuccessStatusCode;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

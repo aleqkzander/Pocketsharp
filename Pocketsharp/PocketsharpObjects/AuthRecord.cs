@@ -6,19 +6,19 @@ namespace PocketsharpObjects
     public class AuthRecord
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public string? Id { get; private set; }
 
         [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; set; }
+        public string? CollectionId { get; private set; }
 
         [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; set; }
+        public string? CollectionName { get; private set; }
 
         [JsonPropertyName("username")]
         public string? Username { get; set; }
 
         [JsonPropertyName("verified")]
-        public bool? Verified { get; set; }
+        public bool? Verified { get; private set; }
 
         [JsonPropertyName("emailVisibility")]
         public bool? EmailVisibility { get; set; }
@@ -28,11 +28,11 @@ namespace PocketsharpObjects
 
         [JsonPropertyName("created")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Created { get; set; }
+        public DateTime? Created { get; private set; }
 
         [JsonPropertyName("updated")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Updated { get; set; }
+        public DateTime? Updated { get; private set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
@@ -41,6 +41,7 @@ namespace PocketsharpObjects
         public byte[]? Avatar { get; set; }
     }
 
+    // make sure date time get converted correctly
     internal class JsonDateTimeConverter : JsonConverter<DateTime?>
     {
         public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
