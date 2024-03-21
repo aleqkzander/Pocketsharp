@@ -61,13 +61,14 @@ Pocketsharp is a C# library for Pocketbase integration.
     // login and acess the returned authResponse
     PocketsharpObjects.AuthResponse? authResponse = await PocketsharpMethods.LoginWithPasswordAsync(client, username, password);
 
+    
+    // update user information and access the updated authRecord
+    mysavedResponseObject.Record.Name = "yournewname"; // we change our name for example
+    PocketsharpObjects.AuthRecord? updatedAuthRecordResponse = await PocketsharpMethods.UpdateUserAsync(client, mysavedResponseObject);
 
-    // update user information and access the returned authRecord
-    PocketsharpObjects.AuthRecord? updatedAuthRecordResponse = await PocketsharpMethods.UpdateUserAsync(client, authRecord, password, passwordConfirm);
 
-
-    // delete a user by id
-    bool isDeleted = await PocketsharpMethods.DeleteUserAsync(client, authRecord.Id);
+    // access user id and token from your auth-response-object
+    bool isDeleted = await PocketsharpMethods.DeleteUserAsync(client, savedAuthResponse.record.id, savedAuthResponse.token);
 ```
 
 <br>
@@ -78,7 +79,7 @@ Pocketsharp is a C# library for Pocketbase integration.
     public class AuthResponse
     {
         [JsonPropertyName("token")]
-        public string? Token { get; private set; }
+        public string? Token { get; set; }
 
         [JsonPropertyName("record")]
         public AuthRecord? Record { get; set; }
@@ -89,19 +90,19 @@ Pocketsharp is a C# library for Pocketbase integration.
     public class AuthRecord
     {
         [JsonPropertyName("id")]
-        public string? Id { get; private set; }
+        public string? Id { get; set; }
 
         [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; private set; }
+        public string? CollectionId { get; set; }
 
         [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; private set; }
+        public string? CollectionName { get; set; }
 
         [JsonPropertyName("username")]
         public string? Username { get; set; }
 
         [JsonPropertyName("verified")]
-        public bool? Verified { get; private set; }
+        public bool? Verified { get; set; }
 
         [JsonPropertyName("emailVisibility")]
         public bool? EmailVisibility { get; set; }
@@ -111,11 +112,11 @@ Pocketsharp is a C# library for Pocketbase integration.
 
         [JsonPropertyName("created")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Created { get; private set; }
+        public DateTime? Created { get; set; }
 
         [JsonPropertyName("updated")]
         [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Updated { get; private set; }
+        public DateTime? Updated { get; set; }
 
         [JsonPropertyName("name")]
         public string? Name { get; set; }
