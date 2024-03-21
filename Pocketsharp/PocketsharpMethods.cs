@@ -29,7 +29,8 @@ namespace Pocketsharp
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
                 if (string.IsNullOrEmpty(record.Email)) return null;
-                if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordConfirm)) return null;
+                if (string.IsNullOrEmpty(password)) return null;
+                if (string.IsNullOrEmpty(passwordConfirm)) return null;
 
                 string apiEndpoint = "/api/collections/users/records";
 
@@ -45,11 +46,7 @@ namespace Pocketsharp
                 };
 
                 var response = await client.PostAsJsonAsync(apiEndpoint, requestbody);
-
-                if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<AuthRecord>();
-
-                return null;
+                return await response.Content.ReadFromJsonAsync<AuthRecord>();
             }
             catch
             {
@@ -69,7 +66,8 @@ namespace Pocketsharp
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (string.IsNullOrEmpty(identity) || string.IsNullOrEmpty(password)) return null;
+                if (string.IsNullOrEmpty(identity)) return null;
+                if (string.IsNullOrEmpty(password)) return null;
 
                 string apiEndpoint = "/api/collections/users/auth-with-password";
 
@@ -80,11 +78,7 @@ namespace Pocketsharp
                 };
 
                 var response = await client.PostAsJsonAsync(apiEndpoint, requestBody);
-
-                if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<AuthResponse>();
-
-                return null;
+                return await response.Content.ReadFromJsonAsync<AuthResponse>();
             }
             catch
             {
@@ -106,7 +100,6 @@ namespace Pocketsharp
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (authResponse == null) return null;
 
                 string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
@@ -125,11 +118,7 @@ namespace Pocketsharp
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
 
                 var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
-
-                if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<AuthRecord>();
-
-                return null;
+                return await response.Content.ReadFromJsonAsync<AuthRecord>();
             }
             catch
             {
