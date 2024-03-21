@@ -62,8 +62,11 @@ Pocketsharp is a C# library for Pocketbase integration.
     PocketsharpObjects.AuthResponse? authResponse = await PocketsharpMethods.LoginWithPasswordAsync(client, username, password);
 
     
-    // update user information and access the updated authRecord
-    mysavedResponseObject.Record.Name = "yournewname"; // we change our name for example
+    // change values by accessing the savedResponseObject
+    mysavedResponseObject.Record.Name = "yournewname";
+
+
+    // send the update request and access the update authRecord
     PocketsharpObjects.AuthRecord? updatedAuthRecordResponse = await PocketsharpMethods.UpdateUserAsync(client, mysavedResponseObject);
 
 
