@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Pocketsharp.Pocketsharp_Utilitys.Objects
+namespace PocketsharpObjects
 {
-    internal class AuthRecord
+    public class AuthRecord
     {
         [JsonPropertyName("id")]
         public string? Id { get; set; }
@@ -38,7 +38,7 @@ namespace Pocketsharp.Pocketsharp_Utilitys.Objects
         public string? Name { get; set; }
 
         [JsonPropertyName("avatar")]
-        public Stream? Avatar { get; set; }
+        public byte[]? Avatar { get; set; }
     }
 
     internal class JsonDateTimeConverter : JsonConverter<DateTime?>

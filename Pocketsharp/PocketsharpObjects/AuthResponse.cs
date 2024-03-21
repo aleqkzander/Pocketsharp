@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Pocketsharp.Pocketsharp_Utilitys.Objects
+namespace PocketsharpObjects
 {
-    internal class AuthResponse
+    public class AuthResponse
     {
         [JsonPropertyName("token")]
         public string? Token { get; set; }

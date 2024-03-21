@@ -3,12 +3,12 @@
  * Setup the base url for your HttpClient-Instance before passing it as a parameter - otherwise null get returned.
  */
 
-using Pocketsharp.Pocketsharp_Utilitys.Objects;
+using PocketsharpObjects;
 using System.Net.Http.Json;
 
-namespace Pocketsharp.Pocketsharp_Utilitys
+namespace Pocketsharp
 {
-    internal class PocketsharpService
+    public class PocketsharpAuthentication
     {
         /// <summary>
         /// Register a new user and return an AuthRecord object on success
@@ -22,30 +22,30 @@ namespace Pocketsharp.Pocketsharp_Utilitys
         /// <param name="password"> is mandatory</param>
         /// <param name="passwordConfirm"> is mandatory</param>
         /// <returns></returns>
-        public static async Task<AuthRecord?> RegisterWithPasswordAsync(HttpClient client, string username, string email, bool emailvisibility, string name, byte[] avatar, string password, string passwordConfirm)
+        public static async Task<AuthRecord?> RegisterWithPasswordAsync(HttpClient client, AuthRecord record, string password, string passwordConfirm)
         {
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (string.IsNullOrEmpty(email)) return null;
+                if (string.IsNullOrEmpty(record.Email)) return null;
                 if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(passwordConfirm)) return null;
 
                 string apiEndpoint = "/api/collections/users/records";
 
                 var requestbody = new
                 {
-                    username,
-                    email,
-                    emailvisibility,
-                    name,
-                    avatar,
+                    record.Username,
+                    record.Email,
+                    record.EmailVisibility,
+                    record.Name,
+                    record.Avatar,
                     password,
                     passwordConfirm
                 };
 
                 var response = await client.PostAsJsonAsync(apiEndpoint, requestbody);
 
-                if (response.IsSuccessStatusCode) 
+                if (response.IsSuccessStatusCode)
                     return await response.Content.ReadFromJsonAsync<AuthRecord>();
 
                 return null;
@@ -80,7 +80,7 @@ namespace Pocketsharp.Pocketsharp_Utilitys
 
                 var response = await client.PostAsJsonAsync(apiEndpoint, requestBody);
 
-                if (response.IsSuccessStatusCode) 
+                if (response.IsSuccessStatusCode)
                     return await response.Content.ReadFromJsonAsync<AuthResponse>();
 
                 return null;
