@@ -11,25 +11,26 @@ Pocketsharp is a C# library for Pocketbase integration.
 <br>
 
 - Add the using directive
-  - ```csharp
+```csharp
     using Pocketsharp
-    ```
+```
 <br>
 
 - Access the objects
-  - ```csharp
+```csharp
     PocketsharpObjects.AuthRecord authRecord = new();
     PocketsharpObjects.AuthResponse authResponse = new();
-    ```
+```
+
 <br>
 
 - Access the methods
-  - ```csharp
+```csharp
     PocketsharpMethods.RegisterWithPasswordAsync(HttpClient client, AuthRecord record, string password, string passwordConfirm)
     PocketsharpMethods.LoginWithPasswordAsync(HttpClient client, string identity, string password)
     PocketsharpMethods.UpdateUserAsync(HttpClient client, AuthResponse authResponse, string ? oldPaddword = null, string? password = null, string? passwordConfirm = null)
     PocketsharpMethods.DeleteUserAsync(HttpClient client,string recordId, string token)
-    ```
+```
 
 <br>
 
