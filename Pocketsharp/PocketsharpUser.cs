@@ -9,7 +9,7 @@ using System.Net.Http.Json;
 
 namespace Pocketsharp
 {
-    public class PocketsharpMethods
+    public class PocketsharpUser
     {
         /// <summary>
         /// Register a new user and return an AuthRecord object on success
