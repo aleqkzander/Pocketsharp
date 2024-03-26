@@ -1,6 +1,5 @@
 ﻿/*
- * Important:
- * Setup the base url for your HttpClient-Instance before passing it as a parameter - otherwise null get returned.
+ * Note: Set up the base URL for your HttpClient instance before passing it as a parameter; otherwise, null will be returned.
  */
 
 using Pocketsharp.Objects;
@@ -12,7 +11,7 @@ namespace Pocketsharp
     public class PocketsharpUser
     {
         /// <summary>
-        /// Register a new user and return an AuthRecord object on success
+        /// Register a new user and return an AuthRecord object upon successful registration.
         /// </summary>
         /// <param name="client"> base url is mandatory</param>
         /// <param name="username"></param>
@@ -59,7 +58,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Authenticate a user and return an AuthResonse object on success
+        /// Log in a user and return an AuthResponse object upon successful authentication.
         /// </summary>
         /// <param name="client"> base url is mandatory</param>
         /// <param name="identity"> is mandatory</param>
@@ -91,7 +90,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Update a user's information and return an updated AuthRecord object on success
+        /// Update a user's information and return an updated AuthRecord object upon successful completion.
         /// </summary>
         /// <param name="client">The HttpClient instance with the base URL set</param>
         /// <param name="record">The updated user record</param>
@@ -135,7 +134,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Delete a user record by ID
+        /// Delete a user record by its ID.
         /// </summary>
         /// <param name="client">The HttpClient instance with the base URL set</param>
         /// <param name="recordId">The ID of the user record to delete</param>

@@ -7,7 +7,7 @@ namespace Pocketsharp
     public class PocketsharpCollection
     {
         /// <summary>
-        /// Post a collection object into a specific target
+        /// Submit a collection object to a designated target.
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
@@ -35,7 +35,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Get all entrys from a specific target as a JsonNode
+        /// Retrieve all entries from a designated target as a JsonNode.
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
@@ -65,7 +65,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Get a specific collection entry
+        /// Retrieve a specific collection entry.
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
