@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace PocketsharpObjects
+namespace Pocketsharp.Objects
 {
     public class AuthResponse
     {

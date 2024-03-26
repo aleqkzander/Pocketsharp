@@ -3,7 +3,7 @@
  * Setup the base url for your HttpClient-Instance before passing it as a parameter - otherwise null get returned.
  */
 
-using PocketsharpObjects;
+using Pocketsharp.Objects;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -25,6 +25,10 @@ namespace Pocketsharp
         /// <returns></returns>
         public static async Task<AuthRecord?> RegisterWithPasswordAsync(HttpClient client, AuthRecord record, string password, string passwordConfirm)
         {
+            /*
+             * The email is required for authentication only within this library
+             */
+
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
@@ -95,8 +99,12 @@ namespace Pocketsharp
         /// <param name="newPassword">User's new password (required only if changing password)</param>
         /// <param name="passwordConfirm">Confirmation of user's new password (required only if changing password)</param>
         /// <returns>An AuthRecord object representing the updated user</returns>
-        public static async Task<AuthRecord?> UpdateUserAsync(HttpClient client, AuthResponse authResponse, string ? oldPaddword = null, string? password = null, string? passwordConfirm = null)
+        public static async Task<AuthRecord?> UpdateUserAsync(HttpClient client, AuthResponse authResponse, string ? oldPaddword = null, string? newPassword = null, string? passwordConfirm = null)
         {
+            /*
+             * Note: the authResponse object holds the token and also the user record
+             */
+
             try
             {
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
@@ -111,13 +119,13 @@ namespace Pocketsharp
                     authResponse.Record.Name,
                     authResponse.Record.Avatar,
                     oldPaddword,
-                    password,
+                    newPassword,
                     passwordConfirm
                 };
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
-
                 var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+
                 return await response.Content.ReadFromJsonAsync<AuthRecord>();
             }
             catch

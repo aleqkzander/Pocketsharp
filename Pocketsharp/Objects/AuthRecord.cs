@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace PocketsharpObjects
+namespace Pocketsharp.Objects
 {
     public class AuthRecord
     {
