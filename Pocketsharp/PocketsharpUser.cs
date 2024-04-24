@@ -2,6 +2,10 @@
  * Note: Set up the base URL for your HttpClient instance before passing it as a parameter; otherwise, null will be returned.
  */
 
+/*
+ * This libray supports email authentication only
+ */
+
 using Pocketsharp.Objects;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -11,7 +15,7 @@ namespace Pocketsharp
     public class PocketsharpUser
     {
         /// <summary>
-        /// Register a new user and return an AuthRecord object upon successful registration.
+        /// Register a new user and return an AuthRecord object upon successful registration
         /// </summary>
         /// <param name="client"> base url is mandatory</param>
         /// <param name="username"></param>
@@ -24,16 +28,19 @@ namespace Pocketsharp
         /// <returns></returns>
         public static async Task<AuthRecord?> RegisterWithPasswordAsync(HttpClient client, AuthRecord record, string password, string passwordConfirm)
         {
-            /*
-             * The email is required for authentication only within this library
-             */
-
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (string.IsNullOrEmpty(record.Email)) return null;
-                if (string.IsNullOrEmpty(password)) return null;
-                if (string.IsNullOrEmpty(passwordConfirm)) return null;
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
+
+                if (string.IsNullOrEmpty(record.Email)) 
+                    throw new NotImplementedException("A email is required for the registration process");
+
+                if (string.IsNullOrEmpty(password)) 
+                    throw new NotImplementedException("A password is required for the registration process");
+
+                if (string.IsNullOrEmpty(passwordConfirm)) 
+                    throw new NotImplementedException("A password conformation is required for the registration process");
 
                 string apiEndpoint = "/api/collections/users/records";
 
@@ -58,25 +65,30 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Log in a user and return an AuthResponse object upon successful authentication.
+        /// Log in a user and return an AuthResponse object upon successful authentication
         /// </summary>
         /// <param name="client"> base url is mandatory</param>
         /// <param name="identity"> is mandatory</param>
         /// <param name="password"> is mandatory</param>
         /// <returns></returns>
-        public static async Task<AuthResponse?> LoginWithPasswordAsync(HttpClient client, string identity, string password)
+        public static async Task<AuthResponse?> LoginWithPasswordAsync(HttpClient client, string email, string password)
         {
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
-                if (string.IsNullOrEmpty(identity)) return null;
-                if (string.IsNullOrEmpty(password)) return null;
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
+
+                if (string.IsNullOrEmpty(email)) 
+                    throw new NotImplementedException("A email is required for the login process");
+
+                if (string.IsNullOrEmpty(password)) 
+                    throw new NotImplementedException("A password is required for the login process");
 
                 string apiEndpoint = "/api/collections/users/auth-with-password";
 
                 var requestBody = new
                 {
-                    identity,
+                    email,
                     password
                 };
 
@@ -90,7 +102,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Update a user's information and return an updated AuthRecord object upon successful completion.
+        /// Update a user's information and return an updated AuthRecord object upon successful completion
         /// </summary>
         /// <param name="client">The HttpClient instance with the base URL set</param>
         /// <param name="record">The updated user record</param>
@@ -106,7 +118,8 @@ namespace Pocketsharp
 
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return null;
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
 
                 string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
@@ -134,7 +147,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Delete a user record by its ID.
+        /// Delete a user record by its ID
         /// </summary>
         /// <param name="client">The HttpClient instance with the base URL set</param>
         /// <param name="recordId">The ID of the user record to delete</param>
@@ -143,11 +156,14 @@ namespace Pocketsharp
         {
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) return false;
-                string apiEndpoint = $"/api/collections/users/records/{recordId}";
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
 
+                string apiEndpoint = $"/api/collections/users/records/{recordId}";
+
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 var response = await client.DeleteAsync(apiEndpoint);
+
                 return response.IsSuccessStatusCode;
             }
             catch

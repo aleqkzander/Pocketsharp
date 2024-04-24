@@ -7,7 +7,7 @@ namespace Pocketsharp
     public class PocketsharpCollection
     {
         /// <summary>
-        /// Submit a collection object to a designated target.
+        /// Submit a collection object to a designated target
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
@@ -18,15 +18,21 @@ namespace Pocketsharp
         {
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) throw new Exception("The client has no base address");
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
+
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 var response = await client.PostAsJsonAsync(apiEndpoint, collectionEntrys);
-                if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
 
-                return await response.Content.ReadAsStringAsync();
+                if (!response.IsSuccessStatusCode) 
+                    throw new Exception(response.StatusCode.ToString());
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                return responseBody;
             }
             catch
             {
@@ -35,7 +41,7 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Retrieve all entries from a designated target as a JsonNode.
+        /// Retrieve all entries from a designated target as a JsonNode
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
@@ -45,13 +51,17 @@ namespace Pocketsharp
         {
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) throw new Exception("The client has no base address");
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
+
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 var response = await client.GetAsync(apiEndpoint);
-                if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
+
+                if (!response.IsSuccessStatusCode) 
+                    throw new Exception(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
                 JsonObject? jsonObject = JsonNode.Parse(responseBody) as JsonObject;
@@ -65,18 +75,20 @@ namespace Pocketsharp
         }
 
         /// <summary>
-        /// Retrieve a specific collection entry.
+        /// Retrieve a specific collection entry
         /// </summary>
         /// <param name="client"></param>
         /// <param name="authToken"></param>
         /// <param name="targetCollection"></param>
         /// <param name="collectionId"></param>
         /// <returns></returns>
-        public static async Task<string> GetSpecificCollectionEntry(HttpClient client, string authToken, string targetCollection, string collectionId)
+        public static async Task<string?> GetSpecificCollectionEntry(HttpClient client, string authToken, string targetCollection, string collectionId)
         {
             try
             {
-                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) throw new Exception("The client has no base address");
+                if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
+                    throw new NotImplementedException("Setup the base address on the client");
+
                 string apiEndpoint = $"/api/collections/{targetCollection}/records/{collectionId}";
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
@@ -86,9 +98,9 @@ namespace Pocketsharp
 
                 return await response.Content.ReadAsStringAsync();
             }
-            catch (Exception ex)
+            catch
             {
-                return ex.Message;
+                return null;
             }
         }
     }
