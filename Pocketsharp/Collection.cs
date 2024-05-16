@@ -4,7 +4,7 @@ using System.Text.Json.Nodes;
 
 namespace Pocketsharp
 {
-    public class PocketsharpCollection
+    public class Collection
     {
         /// <summary>
         /// Submit a collection object to a designated target
@@ -14,7 +14,7 @@ namespace Pocketsharp
         /// <param name="collection"></param>
         /// <param name="collectionEntrys"></param>
         /// <returns></returns>
-        public static async Task<string?> CreateCollectionEntry(HttpClient client, string authToken, string targetCollection, object collectionEntrys)
+        public static async Task<string?> CreateEntry(HttpClient client, string authToken, string targetCollection, object collectionEntrys)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Pocketsharp
         /// <param name="authToken"></param>
         /// <param name="targetCollection"></param>
         /// <returns></returns>
-        public static async Task<JsonNode?> GetAllCollectionEntrys(HttpClient client, string authToken, string targetCollection)
+        public static async Task<JsonNode?> GetAllEntrysFromTarget(HttpClient client, string authToken, string targetCollection)
         {
             try
             {
@@ -82,7 +82,7 @@ namespace Pocketsharp
         /// <param name="targetCollection"></param>
         /// <param name="collectionId"></param>
         /// <returns></returns>
-        public static async Task<string?> GetSpecificCollectionEntry(HttpClient client, string authToken, string targetCollection, string collectionId)
+        public static async Task<string?> GetSpecificEntryFromTarget(HttpClient client, string authToken, string targetCollection, string collectionId)
         {
             try
             {

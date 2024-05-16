@@ -2,12 +2,12 @@
 
 namespace Pocketsharp.Objects
 {
-    public class AuthResponse
+    public class Response
     {
         [JsonPropertyName("token")]
         public string? Token { get; set; }
 
         [JsonPropertyName("record")]
-        public AuthRecord? Record { get; set; }
+        public Record? Record { get; set; }
     }
 }

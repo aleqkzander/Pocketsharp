@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Pocketsharp.Objects
 {
-    public class AuthRecord
+    public class Record
     {
         [JsonPropertyName("id")]
         public string? Id { get; set; }
