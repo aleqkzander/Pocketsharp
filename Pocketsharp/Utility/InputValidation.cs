@@ -1,14 +1,18 @@
 ﻿using Pocketsharp.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pocketsharp.Utility
 {
     internal class InputValidation
     {
+        /// <summary>
+        /// Return true when all register requirements met
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="record"></param>
+        /// <param name="password"></param>
+        /// <param name="passwordConfirm"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public static bool RegistrationInputIsValid(HttpClient client, Record record, string password, string passwordConfirm)
         {
             if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
@@ -26,6 +30,14 @@ namespace Pocketsharp.Utility
             return true;
         }
 
+        /// <summary>
+        /// Return true when all login requirements met
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="email"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public static bool LoginInputIsValid(HttpClient client, string email, string password)
         {
             if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))

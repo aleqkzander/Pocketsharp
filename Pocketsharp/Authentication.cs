@@ -1,6 +1,5 @@
 ﻿using Pocketsharp.Objects;
 using Pocketsharp.Utility;
-using System;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
