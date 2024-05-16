@@ -5,9 +5,9 @@ namespace Pocketsharp.Objects
     public class Response
     {
         [JsonPropertyName("token")]
-        public string? Token { get; set; }
+        public string? Token { get; set; } = string.Empty;
 
         [JsonPropertyName("record")]
-        public Record? Record { get; set; }
+        public Record? Record { get; set; } = new();
     }
 }
