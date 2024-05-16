@@ -5,36 +5,36 @@ namespace Pocketsharp.Objects
     public class Record
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; } = string.Empty;
+        public string Id { get; set; } = string.Empty;
 
         [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; set; } = string.Empty;
+        public string CollectionId { get; set; } = string.Empty;
 
         [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; set; } = string.Empty;
+        public string CollectionName { get; set; } = string.Empty;
 
         [JsonPropertyName("username")]
-        public string? Username { get; set; } = string.Empty;
+        public string Username { get; set; } = string.Empty;
 
         [JsonPropertyName("verified")]
-        public bool? Verified { get; set; } = false;
+        public bool Verified { get; set; } = false;
 
         [JsonPropertyName("emailVisibility")]
-        public bool? EmailVisibility { get; set; } = false;
+        public bool EmailVisibility { get; set; } = false;
 
         [JsonPropertyName("email")]
-        public string? Email { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
-        [JsonPropertyName("created")]
-        public DateTimeOffset? Created { get; set; } = DateTime.Now;
+        [JsonIgnore]
+        public DateTimeOffset Created { get; set; } = DateTimeOffset.Now;
 
-        [JsonPropertyName("updated")]
-        public DateTimeOffset? Updated { get; set; } = DateTime.Now;
+        [JsonIgnore]
+        public DateTimeOffset Updated { get; set; } = DateTimeOffset.Now;
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("avatar")]
-        public byte[]? Avatar { get; set; } = null;
+        public byte[] Avatar { get; set; } = [];
     }
 }

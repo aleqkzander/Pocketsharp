@@ -3,6 +3,7 @@ using Pocketsharp.Utility;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
+
 namespace Pocketsharp
 {
     public class Authentication
@@ -24,30 +25,43 @@ namespace Pocketsharp
             /// <param name="password"> is mandatory</param>
             /// <param name="passwordConfirm"> is mandatory</param>
             /// <returns></returns>
-            public static async Task<Record?> RegisterAsync(HttpClient client, Record record, string password, string passwordConfirm)
+            public static async Task<string?> RegisterAsync(HttpClient client, Record record, string password, string passwordConfirm)
             {
                 try
                 {
-                    if (!InputValidation.RegistrationInputIsValid(client, record, password, passwordConfirm))
-                        throw new NotImplementedException($"LIBRARY ERROR\n{"Register input is not valid"}");
+                    if (InputValidation.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
+                        throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
-                    var requestbody = new
+                    using var content = new MultipartFormDataContent
                     {
-                        record.Username,
-                        record.Email,
-                        record.EmailVisibility,
-                        record.Name,
-                        record.Avatar,
-                        password,
-                        passwordConfirm
+                        { new StringContent(record.Username),
+                            "username" },
+
+                        { new StringContent(record.Email),                      
+                            "email" },
+
+                        { new StringContent(record.EmailVisibility.ToString()), 
+                            "emailVisibility" },
+
+                        { new StringContent(record.Name),                       
+                            "name"},
+
+                        { new StringContent(password),                          
+                            "password" },
+
+                        { new StringContent(passwordConfirm),
+                            "passwordConfirm" },
                     };
 
-                    var response = await client.PostAsJsonAsync(registerApiEndpoint, requestbody);
-                    return await response.Content.ReadFromJsonAsync<Record>();
+                    if (record.Avatar.Length != 0)
+                        content.Add(new ByteArrayContent(record.Avatar ?? []), "avatar", $"{record.Id}_avatar.png");
+
+                    var response = await client.PostAsync(registerApiEndpoint, content);
+                    return await response.Content.ReadAsStringAsync();
                 }
                 catch (Exception exception)
                 {
-                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
+                    throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
                 }
             }
 
@@ -62,8 +76,8 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (!InputValidation.LoginInputIsValid(client, email, password))
-                        throw new NotImplementedException($"LIBRARY ERROR\n{"Login input is not valid"}");
+                    if (InputValidation.LoginInputIsValid(client, email, password) == false)
+                        throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     var requestBody = new
                     {
@@ -76,7 +90,7 @@ namespace Pocketsharp
                 }
                 catch (Exception exception)
                 {
-                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
+                    throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
                 }
             }
         }
@@ -120,7 +134,7 @@ namespace Pocketsharp
                 }
                 catch (Exception exception)
                 {
-                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
+                    throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
                 }
             }
 
@@ -146,7 +160,7 @@ namespace Pocketsharp
                 }
                 catch (Exception exception)
                 {
-                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
+                    throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
                 }
             }
         }
