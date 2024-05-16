@@ -10,7 +10,7 @@ namespace Pocketsharp
 {
     public class Authentication
     {
-        public class WithPassword
+        public class EmailAndPassword
         {
             /// <summary>
             /// Register a new user and return an AuthRecord object upon successful registration
@@ -56,9 +56,9 @@ namespace Pocketsharp
                     var response = await client.PostAsJsonAsync(apiEndpoint, requestbody);
                     return await response.Content.ReadFromJsonAsync<Record>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
 
@@ -93,9 +93,9 @@ namespace Pocketsharp
                     var response = await client.PostAsJsonAsync(apiEndpoint, requestBody);
                     return await response.Content.ReadFromJsonAsync<Response>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
         }
@@ -137,9 +137,9 @@ namespace Pocketsharp
 
                     return await response.Content.ReadFromJsonAsync<Record>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
 
@@ -163,9 +163,9 @@ namespace Pocketsharp
 
                     return response.IsSuccessStatusCode;
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return false;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
         }
