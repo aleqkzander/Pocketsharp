@@ -1,74 +1,40 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Pocketsharp.Objects
 {
     public class Record
     {
         [JsonPropertyName("id")]
-        public string? Id { get; set; }
+        public string? Id { get; set; } = string.Empty;
 
         [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; set; }
+        public string? CollectionId { get; set; } = string.Empty;
 
         [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; set; }
+        public string? CollectionName { get; set; } = string.Empty;
 
         [JsonPropertyName("username")]
-        public string? Username { get; set; }
+        public string? Username { get; set; } = string.Empty;
 
         [JsonPropertyName("verified")]
-        public bool? Verified { get; set; }
+        public bool? Verified { get; set; } = false;
 
         [JsonPropertyName("emailVisibility")]
-        public bool? EmailVisibility { get; set; }
+        public bool? EmailVisibility { get; set; } = false;
 
         [JsonPropertyName("email")]
-        public string? Email { get; set; }
+        public string? Email { get; set; } = string.Empty;
 
         [JsonPropertyName("created")]
-        [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Created { get; set; }
+        public DateTimeOffset? Created { get; set; } = DateTime.Now;
 
         [JsonPropertyName("updated")]
-        [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Updated { get; set; }
+        public DateTimeOffset? Updated { get; set; } = DateTime.Now;
 
         [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        public string? Name { get; set; } = string.Empty;
 
         [JsonPropertyName("avatar")]
-        public byte[]? Avatar { get; set; }
-    }
-
-    // make sure date time get converted correctly
-    internal class JsonDateTimeConverter : JsonConverter<DateTime?>
-    {
-        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.Null)
-            {
-                return null;
-            }
-
-            if (reader.TokenType == JsonTokenType.String && DateTime.TryParse(reader.GetString(), out var dateTime))
-            {
-                return dateTime;
-            }
-
-            throw new JsonException($"Unable to parse '{reader.GetString()}' as DateTime.");
-        }
-
-        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
-        {
-            if (value.HasValue)
-            {
-                writer.WriteStringValue(value.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
-            }
-            else
-            {
-                writer.WriteNullValue();
-            }
-        }
+        public byte[]? Avatar { get; set; } = null;
     }
 }

@@ -1,8 +1,5 @@
-﻿/*
- * Note: Set up the base URL for your HttpClient instance before passing it as a parameter; otherwise, null will be returned.
- */
-
-using Pocketsharp.Objects;
+﻿using Pocketsharp.Objects;
+using Pocketsharp.Utility;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
@@ -10,8 +7,11 @@ namespace Pocketsharp
 {
     public class Authentication
     {
-        public class WithPassword
+        public class EmailAndPassword
         {
+            static readonly string registerApiEndpoint = "/api/collections/users/records";
+            static readonly string loginApiEndpoint = "/api/collections/users/auth-with-password";
+
             /// <summary>
             /// Register a new user and return an AuthRecord object upon successful registration
             /// </summary>
@@ -28,19 +28,8 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
-                        throw new NotImplementedException("Setup the base address on the client");
-
-                    if (string.IsNullOrEmpty(record.Email))
-                        throw new NotImplementedException("A email is required for the registration process");
-
-                    if (string.IsNullOrEmpty(password))
-                        throw new NotImplementedException("A password is required for the registration process");
-
-                    if (string.IsNullOrEmpty(passwordConfirm))
-                        throw new NotImplementedException("A password conformation is required for the registration process");
-
-                    string apiEndpoint = "/api/collections/users/records";
+                    if (!InputValidation.RegistrationInputIsValid(client, record, password, passwordConfirm))
+                        throw new NotImplementedException($"LIBRARY ERROR\n{"Register input is not valid"}");
 
                     var requestbody = new
                     {
@@ -53,12 +42,12 @@ namespace Pocketsharp
                         passwordConfirm
                     };
 
-                    var response = await client.PostAsJsonAsync(apiEndpoint, requestbody);
+                    var response = await client.PostAsJsonAsync(registerApiEndpoint, requestbody);
                     return await response.Content.ReadFromJsonAsync<Record>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
 
@@ -73,16 +62,8 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
-                        throw new NotImplementedException("Setup the base address on the client");
-
-                    if (string.IsNullOrEmpty(email))
-                        throw new NotImplementedException("A email is required for the login process");
-
-                    if (string.IsNullOrEmpty(password))
-                        throw new NotImplementedException("A password is required for the login process");
-
-                    string apiEndpoint = "/api/collections/users/auth-with-password";
+                    if (!InputValidation.LoginInputIsValid(client, email, password))
+                        throw new NotImplementedException($"LIBRARY ERROR\n{"Login input is not valid"}");
 
                     var requestBody = new
                     {
@@ -90,12 +71,12 @@ namespace Pocketsharp
                         password
                     };
 
-                    var response = await client.PostAsJsonAsync(apiEndpoint, requestBody);
+                    var response = await client.PostAsJsonAsync(loginApiEndpoint, requestBody);
                     return await response.Content.ReadFromJsonAsync<Response>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
         }
@@ -137,9 +118,9 @@ namespace Pocketsharp
 
                     return await response.Content.ReadFromJsonAsync<Record>();
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return null;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
 
@@ -163,9 +144,9 @@ namespace Pocketsharp
 
                     return response.IsSuccessStatusCode;
                 }
-                catch
+                catch (Exception exception)
                 {
-                    return false;
+                    throw new NotImplementedException($"LIBRARY ERROR\n{exception.Message}");
                 }
             }
         }
