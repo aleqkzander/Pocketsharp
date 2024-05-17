@@ -76,7 +76,7 @@ namespace Pocketsharp
             /// <param name="identity"> is mandatory</param>
             /// <param name="password"> is mandatory</param>
             /// <returns></returns>
-            public static async Task<Response?> LoginWAsync(HttpClient client, string email, string password)
+            public static async Task<string?> LoginWAsync(HttpClient client, string email, string password)
             {
                 try
                 {
@@ -90,7 +90,7 @@ namespace Pocketsharp
                     };
 
                     var response = await client.PostAsJsonAsync(loginApiEndpoint, requestBody);
-                    return await response.Content.ReadFromJsonAsync<Response>();
+                    return await response.Content.ReadAsStringAsync();
                 }
                 catch (Exception exception)
                 {
