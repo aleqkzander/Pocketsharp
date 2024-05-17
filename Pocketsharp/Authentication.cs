@@ -1,4 +1,8 @@
-﻿using Pocketsharp.Objects;
+﻿/*
+ * Use multipart/form-data as it's the only form of uploading files
+ */
+
+using Pocketsharp.Objects;
 using Pocketsharp.Utility;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
