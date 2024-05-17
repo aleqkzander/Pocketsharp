@@ -16,5 +16,15 @@ namespace Pocketsharp.Utility
         {
             return JsonSerializer.Deserialize<Record?>(json);
         }
+
+        public static string SerializeResponseToJson(Response? response)
+        {
+            return JsonSerializer.Serialize(response, serializerOptions);
+        }
+
+        public static Response? DeserializeJsonToResponse(string json)
+        {
+            return JsonSerializer.Deserialize<Response?>(json);
+        }
     }
 }

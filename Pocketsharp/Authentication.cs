@@ -58,7 +58,7 @@ namespace Pocketsharp
                     };
 
                     if (record.Avatar.Length != 0)
-                        content.Add(new ByteArrayContent(record.Avatar ?? []), "avatar", $"{record.Id}_avatar.png");
+                        content.Add(new ByteArrayContent(record.AvatarByte ?? []), "avatar", $"{record.Id}_avatar.png");
 
                     var response = await client.PostAsync(registerApiEndpoint, content);
                     return await response.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ namespace Pocketsharp
             /// <param name="identity"> is mandatory</param>
             /// <param name="password"> is mandatory</param>
             /// <returns></returns>
-            public static async Task<string?> LoginWAsync(HttpClient client, string email, string password)
+            public static async Task<string?> LoginAsync(HttpClient client, string email, string password)
             {
                 try
                 {
@@ -85,7 +85,7 @@ namespace Pocketsharp
 
                     var requestBody = new
                     {
-                        email,
+                        identity = email,
                         password
                     };
 
@@ -101,6 +101,33 @@ namespace Pocketsharp
 
         public class User
         {
+            /// <summary>
+            /// Return a users avatar as byte image
+            /// </summary>
+            /// <param name="client"></param>
+            /// <param name="authResponse"></param>
+            /// <param name="filename"></param>
+            /// <returns></returns>
+            /// <exception cref="NotImplementedException"></exception>
+            public static async Task<byte[]> DownloadAvatar(HttpClient client, Response authResponse, string filename)
+            {
+                try
+                {
+                    if (InputValidation.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
+                        throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
+
+                    string apiEndpoint = $"/api/files/{authResponse.Record.CollectionId}/{authResponse.Record.Id}/{filename}";
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
+
+                    var response = await client.GetAsync(apiEndpoint);
+                    return await response.Content.ReadAsByteArrayAsync();
+                }
+                catch (Exception exception)
+                {
+                    throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
+                }
+            }
+
             /// <summary>
             /// Update a user's information and return an updated AuthRecord object upon successful completion
             /// </summary>
