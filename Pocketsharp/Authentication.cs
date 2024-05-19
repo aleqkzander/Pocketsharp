@@ -137,7 +137,7 @@ namespace Pocketsharp
             /// <param name="newPassword">User's new password (required only if changing password)</param>
             /// <param name="passwordConfirm">Confirmation of user's new password (required only if changing password)</param>
             /// <returns>An AuthRecord object representing the updated user</returns>
-            public static async Task<Record?> UpdateAsync(HttpClient client, Response authResponse, string? oldPaddword = null, string? newPassword = null, string? passwordConfirm = null)
+            public static async Task<string?> UpdateAsync(HttpClient client, Response authResponse, string? oldPassword = null, string? newPassword = null, string? passwordConfirm = null)
             {
                 try
                 {
@@ -146,22 +146,57 @@ namespace Pocketsharp
 
                     string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
-                    var requestBody = new
+                    using var content = new MultipartFormDataContent
                     {
-                        authResponse.Record.Username,
-                        authResponse.Record.Email,
-                        authResponse.Record.EmailVisibility,
-                        authResponse.Record.Name,
-                        authResponse.Record.Avatar,
-                        oldPaddword,
-                        newPassword,
-                        passwordConfirm
+                        { new StringContent(authResponse.Record.Username),
+                            "username" },
+
+                        { new StringContent(authResponse.Record.Email),
+                            "email" },
+
+                        { new StringContent(authResponse.Record.EmailVisibility.ToString()),
+                            "emailVisibility" },
+
+                        { new StringContent(authResponse.Record.Name),
+                            "name"},
                     };
 
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
-                    var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+                    if (authResponse.Record.Avatar.Length != 0)
+                        content.Add(new ByteArrayContent(authResponse.Record.AvatarByte ?? []), "avatar", $"{authResponse.Record.Id}_avatar.png");
 
-                    return await response.Content.ReadFromJsonAsync<Record>();
+                    if (oldPassword != null)
+                    {
+                        content.Add(new StringContent(oldPassword), "oldPassword");
+
+                        if (string.IsNullOrEmpty(newPassword))
+                            throw new NotImplementedException("LIBRARY ERROR:\n\nIf you wan't to change your password you need to provide a new password");
+                        content.Add(new StringContent(newPassword!), "password");
+
+                        if (string.IsNullOrEmpty(passwordConfirm) || passwordConfirm != newPassword)
+                            throw new NotImplementedException("LIBRARY ERROR:\n\nYour conformation password doesn't match");
+                        content.Add(new StringContent(passwordConfirm!), "passwordConfirm");
+                    }
+
+                    #region old stuff
+                    //var requestBody = new
+                    //{
+                    //    authResponse.Record.Username,
+                    //    authResponse.Record.Email,
+                    //    authResponse.Record.EmailVisibility,
+                    //    authResponse.Record.Name,
+                    //    authResponse.Record.Avatar,
+                    //    oldPaddword,
+                    //    newPassword,
+                    //    passwordConfirm
+                    //};
+
+                    //var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+                    #endregion oldstuff
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
+
+                    var response = await client.PatchAsync(apiEndpoint, content);
+                    return await response.Content.ReadAsStringAsync();
                 }
                 catch (Exception exception)
                 {
