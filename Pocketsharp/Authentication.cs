@@ -144,6 +144,9 @@ namespace Pocketsharp
                     if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
                         throw new NotImplementedException("Setup the base address on the client");
 
+                    if (string.IsNullOrEmpty(authResponse.Record.Email))
+                        throw new NotImplementedException("An email is always required as it is users identity");
+
                     string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
                     using var content = new MultipartFormDataContent
