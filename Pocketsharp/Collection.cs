@@ -21,10 +21,9 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
-                string apiEndpoint = $"/api/collections/{targetCollection}/records";
-
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
+                string apiEndpoint = $"/api/collections/{targetCollection}/records";
                 var response = await client.PostAsJsonAsync(apiEndpoint, collectionEntrys);
 
                 if (!response.IsSuccessStatusCode) 
@@ -54,10 +53,9 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
-                string apiEndpoint = $"/api/collections/{targetCollection}/records";
-
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
+                string apiEndpoint = $"/api/collections/{targetCollection}/records";
                 var response = await client.GetAsync(apiEndpoint);
 
                 if (!response.IsSuccessStatusCode) 
@@ -89,13 +87,12 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
-                string apiEndpoint = $"/api/collections/{targetCollection}/records/{collectionId}";
-
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
+                string apiEndpoint = $"/api/collections/{targetCollection}/records/{collectionId}";
                 var response = await client.GetAsync(apiEndpoint);
-                if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
 
+                if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
                 return await response.Content.ReadAsStringAsync();
             }
             catch
