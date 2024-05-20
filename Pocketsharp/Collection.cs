@@ -14,7 +14,7 @@ namespace Pocketsharp
         /// <param name="collection"></param>
         /// <param name="collectionEntrys"></param>
         /// <returns></returns>
-        public static async Task<string?> CreateEntry(HttpClient client, string authToken, string targetCollection, string collectionEntrys)
+        public static async Task<string?> CreateEntry(HttpClient client, string authToken, string targetCollection, object userObject)
         {
             try
             {
@@ -27,13 +27,13 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(targetCollection))
                     throw new NotImplementedException("A target collection is required");
 
-                if (collectionEntrys == null)
+                if (userObject == null)
                     throw new NotImplementedException("A valid object is required");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
-                var response = await client.PostAsJsonAsync(apiEndpoint, collectionEntrys);
+
+                var response = await client.PostAsJsonAsync(apiEndpoint, userObject);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
@@ -66,8 +66,8 @@ namespace Pocketsharp
                     throw new NotImplementedException("Target collection is required");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
+
                 var response = await client.GetAsync(apiEndpoint);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -112,8 +112,8 @@ namespace Pocketsharp
                     throw new NotImplementedException("Entry ID required");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-
                 string apiEndpoint = $"/api/collections/{targetCollection}/records/{entryId}";
+
                 var response = await client.GetAsync(apiEndpoint);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
