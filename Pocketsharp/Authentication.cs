@@ -33,7 +33,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
+                    if (InputUtility.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     using var content = new MultipartFormDataContent
@@ -41,16 +41,16 @@ namespace Pocketsharp
                         { new StringContent(record.Username),
                             "username" },
 
-                        { new StringContent(record.Email),                      
+                        { new StringContent(record.Email),
                             "email" },
 
-                        { new StringContent(record.EmailVisibility.ToString()), 
+                        { new StringContent(record.EmailVisibility.ToString()),
                             "emailVisibility" },
 
-                        { new StringContent(record.Name),                       
+                        { new StringContent(record.Name),
                             "name"},
 
-                        { new StringContent(password),                          
+                        { new StringContent(password),
                             "password" },
 
                         { new StringContent(passwordConfirm),
@@ -61,7 +61,10 @@ namespace Pocketsharp
                         content.Add(new ByteArrayContent(record.AvatarByte ?? []), "avatar", $"{record.Id}_avatar.png");
 
                     var response = await client.PostAsync(registerApiEndpoint, content);
-                    return await response.Content.ReadAsStringAsync();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {
@@ -80,7 +83,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.LoginInputIsValid(client, email, password) == false)
+                    if (InputUtility.LoginInputIsValid(client, email, password) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     var requestBody = new
@@ -90,7 +93,10 @@ namespace Pocketsharp
                     };
 
                     var response = await client.PostAsJsonAsync(loginApiEndpoint, requestBody);
-                    return await response.Content.ReadAsStringAsync();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {
@@ -113,7 +119,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
+                    if (InputUtility.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     string apiEndpoint = $"/api/files/{authResponse.Record.CollectionId}/{authResponse.Record.Id}/{filename}";
@@ -137,31 +143,71 @@ namespace Pocketsharp
             /// <param name="newPassword">User's new password (required only if changing password)</param>
             /// <param name="passwordConfirm">Confirmation of user's new password (required only if changing password)</param>
             /// <returns>An AuthRecord object representing the updated user</returns>
-            public static async Task<Record?> UpdateAsync(HttpClient client, Response authResponse, string? oldPaddword = null, string? newPassword = null, string? passwordConfirm = null)
+            public static async Task<string?> UpdateAsync(HttpClient client, Response authResponse, string? oldPassword = null, string? newPassword = null, string? passwordConfirm = null)
             {
                 try
                 {
                     if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
                         throw new NotImplementedException("Setup the base address on the client");
 
+                    if (string.IsNullOrEmpty(authResponse.Record.Email))
+                        throw new NotImplementedException("An email is always required as it is users identity");
+
                     string apiEndpoint = $"/api/collections/users/records/{authResponse.Record!.Id}";
 
-                    var requestBody = new
+                    using var content = new MultipartFormDataContent
                     {
-                        authResponse.Record.Username,
-                        authResponse.Record.Email,
-                        authResponse.Record.EmailVisibility,
-                        authResponse.Record.Name,
-                        authResponse.Record.Avatar,
-                        oldPaddword,
-                        newPassword,
-                        passwordConfirm
+                        { new StringContent(authResponse.Record.Username),
+                            "username" },
+
+                        { new StringContent(authResponse.Record.Email),
+                            "email" },
+
+                        { new StringContent(authResponse.Record.EmailVisibility.ToString()),
+                            "emailVisibility" },
+
+                        { new StringContent(authResponse.Record.Name),
+                            "name"},
                     };
 
-                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
-                    var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+                    if (authResponse.Record.Avatar.Length != 0)
+                        content.Add(new ByteArrayContent(authResponse.Record.AvatarByte ?? []), "avatar", $"{authResponse.Record.Id}_avatar.png");
 
-                    return await response.Content.ReadFromJsonAsync<Record>();
+                    if (oldPassword != null)
+                    {
+                        content.Add(new StringContent(oldPassword), "oldPassword");
+
+                        if (string.IsNullOrEmpty(newPassword))
+                            throw new NotImplementedException("LIBRARY ERROR:\n\nIf you wan't to change your password you need to provide a new password");
+                        content.Add(new StringContent(newPassword!), "password");
+
+                        if (string.IsNullOrEmpty(passwordConfirm) || passwordConfirm != newPassword)
+                            throw new NotImplementedException("LIBRARY ERROR:\n\nYour conformation password doesn't match");
+                        content.Add(new StringContent(passwordConfirm!), "passwordConfirm");
+                    }
+
+                    #region old stuff
+                    //var requestBody = new
+                    //{
+                    //    authResponse.Record.Username,
+                    //    authResponse.Record.Email,
+                    //    authResponse.Record.EmailVisibility,
+                    //    authResponse.Record.Name,
+                    //    authResponse.Record.Avatar,
+                    //    oldPaddword,
+                    //    newPassword,
+                    //    passwordConfirm
+                    //};
+
+                    //var response = await client.PatchAsJsonAsync(apiEndpoint, requestBody);
+                    #endregion oldstuff
+
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
+                    var response = await client.PatchAsync(apiEndpoint, content);
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {

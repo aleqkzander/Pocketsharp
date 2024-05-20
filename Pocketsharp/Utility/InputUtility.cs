@@ -2,7 +2,7 @@
 
 namespace Pocketsharp.Utility
 {
-    internal class InputValidation
+    internal class InputUtility
     {
         public static bool RegistrationInputIsValid(HttpClient client, Record record, string password, string passwordConfirm)
         {
