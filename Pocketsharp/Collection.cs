@@ -14,7 +14,7 @@ namespace Pocketsharp
         /// <param name="collection"></param>
         /// <param name="collectionEntrys"></param>
         /// <returns></returns>
-        public static async Task<string?> CreateEntry(HttpClient client, string authToken, string targetCollection, object collectionEntrys)
+        public static async Task<string?> CreateEntry(HttpClient client, string authToken, string targetCollection, string collectionEntrys)
         {
             try
             {
@@ -36,7 +36,7 @@ namespace Pocketsharp
                 var response = await client.PostAsJsonAsync(apiEndpoint, collectionEntrys);
 
                 if (!response.IsSuccessStatusCode) 
-                    throw new Exception(response.StatusCode.ToString());
+                    throw new NotImplementedException(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -75,7 +75,7 @@ namespace Pocketsharp
                 var response = await client.GetAsync(apiEndpoint);
 
                 if (!response.IsSuccessStatusCode) 
-                    throw new Exception(response.StatusCode.ToString());
+                    throw new NotImplementedException(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
 
@@ -125,7 +125,7 @@ namespace Pocketsharp
                 var response = await client.GetAsync(apiEndpoint);
 
                 if (!response.IsSuccessStatusCode) 
-                    throw new Exception(response.StatusCode.ToString());
+                    throw new NotImplementedException(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
 
