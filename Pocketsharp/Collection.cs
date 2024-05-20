@@ -94,7 +94,7 @@ namespace Pocketsharp
         /// <param name="targetCollection"></param>
         /// <param name="collectionId"></param>
         /// <returns></returns>
-        public static async Task<string?> GetSpecificEntryFromTarget(HttpClient client, string authToken, string targetCollection, string collectionId)
+        public static async Task<string?> GetSpecificEntryFromTarget(HttpClient client, string authToken, string targetCollection, string entryId)
         {
             try
             {
@@ -106,7 +106,7 @@ namespace Pocketsharp
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
-                string apiEndpoint = $"/api/collections/{targetCollection}/records/{collectionId}";
+                string apiEndpoint = $"/api/collections/{targetCollection}/records/{entryId}";
                 var response = await client.GetAsync(apiEndpoint);
 
                 if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
@@ -114,7 +114,7 @@ namespace Pocketsharp
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
-                else throw new NotImplementedException($"LIBRARY INFO\n\n{"Entry creation failed gracefully"}");
+                else throw new NotImplementedException($"LIBRARY INFO\n\n{"Getting specific entry failed gracefully"}");
             }
             catch (Exception exception)
             {
