@@ -33,7 +33,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
+                    if (InputUtility.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     using var content = new MultipartFormDataContent
@@ -41,16 +41,16 @@ namespace Pocketsharp
                         { new StringContent(record.Username),
                             "username" },
 
-                        { new StringContent(record.Email),                      
+                        { new StringContent(record.Email),
                             "email" },
 
-                        { new StringContent(record.EmailVisibility.ToString()), 
+                        { new StringContent(record.EmailVisibility.ToString()),
                             "emailVisibility" },
 
-                        { new StringContent(record.Name),                       
+                        { new StringContent(record.Name),
                             "name"},
 
-                        { new StringContent(password),                          
+                        { new StringContent(password),
                             "password" },
 
                         { new StringContent(passwordConfirm),
@@ -83,7 +83,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.LoginInputIsValid(client, email, password) == false)
+                    if (InputUtility.LoginInputIsValid(client, email, password) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     var requestBody = new
@@ -119,7 +119,7 @@ namespace Pocketsharp
             {
                 try
                 {
-                    if (InputValidation.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
+                    if (InputUtility.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
                         throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
 
                     string apiEndpoint = $"/api/files/{authResponse.Record.CollectionId}/{authResponse.Record.Id}/{filename}";
@@ -203,9 +203,11 @@ namespace Pocketsharp
                     #endregion oldstuff
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
-
                     var response = await client.PatchAsync(apiEndpoint, content);
-                    return await response.Content.ReadAsStringAsync();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {
