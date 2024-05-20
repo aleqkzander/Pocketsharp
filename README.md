@@ -1,22 +1,21 @@
 # Pocketsharp - Alpha 1.0.0.0
-Pocketsharp is a C# library for Pocketbase integration.
+Pocketsharp is a C# library designed to easily connect with Pocketbase and is compatible with .NET 8.0 applications
 
 <br>
 
-# How to use Pocketsharp
-
+# How to Use Pocketsharp <a name="how-to-use-pocketsharp"></a>
 - Import the Pocketsharp.dll reference [Microsoft how to use the reference manager](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-add-or-remove-references-by-using-the-reference-manager?view=vs-2022)
 
 <br>
 
-- Add using directive
+- Add the using directive (optional)
 ```csharp
     using Pocketsharp
 ```
 
 <br>
 
-- Access methods
+- Access the methods
 ```csharp
     string response = Pocketsharp.Authentication.EmailAndPassword.RegisterAsync(HttpClient client, Record record, string password, string passwordConfirm);
     string response = Pocketsharp.Authentication.EmailAndPassword.LoginAsync(HttpClient client, string email, string password);
@@ -32,7 +31,7 @@ Pocketsharp is a C# library for Pocketbase integration.
 
 <br>
 
-- Access objects
+- Access the objects
 ```csharp
     Pocketsharp.Objects.Record record = new();
     Pocketsharp.Objects.Response response = new();
@@ -40,15 +39,17 @@ Pocketsharp is a C# library for Pocketbase integration.
 
 <br>
 
-- Access helper methods
+- Access the json converter
 ```csharp
-    public static string SerializeRecordToJson(Record? record);
-    public static Record? DeserializeJsonToRecord(string json);
+    string jsonRecord = Pocketsharp.Utility.JsonUtility.SerializeRecordToJson(recordObject);
+    Pocketsharp.Objects.Record recordFromJson = Pocketsharp.Utility.JsonUtility.DeserializeJsonToRecord(jsonRecord);
 
-    public static string SerializeResponseToJson(Response? response);
-    public static Response? DeserializeJsonToResponse(string json);
+    string jsonResponse = Pocketsharp.Utility.JsonUtility.SerializeResponseToJson(responseObject);
+    Pocketsharp.Objects.Response = Pocketsharp.Utility.JsonUtility.DeserializeJsonToResponse(jsonResponse);
 ```
 
 <br>
 
-# Example
+# 2. Example project <a name="example-project"></a>
+Check out this Windows Forms project to see a demonstration of Pocketsharp in action
+- https://github.com/aleqkzander/Pocketsharp-Desktop
