@@ -21,6 +21,9 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
+                if (string.IsNullOrEmpty(authToken))
+                    throw new NotImplementedException("Auth token is required");
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
@@ -31,11 +34,12 @@ namespace Pocketsharp
 
                 var responseBody = await response.Content.ReadAsStringAsync();
 
-                return responseBody;
+                if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
+                else throw new NotImplementedException($"LIBRARY INFO\n\n{"Entry creation failed gracefully"}");
             }
-            catch
+            catch (Exception exception)
             {
-                return null;
+                throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
             }
         }
 
@@ -53,6 +57,9 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
+                if (string.IsNullOrEmpty(authToken))
+                    throw new NotImplementedException("Auth token is required");
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
@@ -62,13 +69,20 @@ namespace Pocketsharp
                     throw new Exception(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
-                JsonObject? jsonObject = JsonNode.Parse(responseBody) as JsonObject;
 
-                return jsonObject?["items"];
+                if (string.IsNullOrEmpty(responseBody) == false)
+                {
+                    JsonObject? jsonObject = JsonNode.Parse(responseBody) as JsonObject;
+                    return jsonObject?["items"];
+                }
+                else
+                {
+                    throw new NotImplementedException($"LIBRARY INFO\n\n{"Getting entrys failed gracefully"}");
+                }
             }
-            catch
+            catch (Exception exception)
             {
-                return null;
+                throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
             }
         }
 
@@ -87,17 +101,24 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(client.BaseAddress?.ToString())) 
                     throw new NotImplementedException("Setup the base address on the client");
 
+                if (string.IsNullOrEmpty(authToken))
+                    throw new NotImplementedException("Auth token is required");
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records/{collectionId}";
                 var response = await client.GetAsync(apiEndpoint);
 
                 if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
-                return await response.Content.ReadAsStringAsync();
+
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
+                else throw new NotImplementedException($"LIBRARY INFO\n\n{"Entry creation failed gracefully"}");
             }
-            catch
+            catch (Exception exception)
             {
-                return null;
+                throw new NotImplementedException($"LIBRARY ERROR\n\n{exception}");
             }
         }
     }
