@@ -61,7 +61,10 @@ namespace Pocketsharp
                         content.Add(new ByteArrayContent(record.AvatarByte ?? []), "avatar", $"{record.Id}_avatar.png");
 
                     var response = await client.PostAsync(registerApiEndpoint, content);
-                    return await response.Content.ReadAsStringAsync();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {
@@ -90,7 +93,10 @@ namespace Pocketsharp
                     };
 
                     var response = await client.PostAsJsonAsync(loginApiEndpoint, requestBody);
-                    return await response.Content.ReadAsStringAsync();
+                    string responseString = await response.Content.ReadAsStringAsync();
+
+                    if (string.IsNullOrEmpty(responseString) == false) return responseString;
+                    else throw new NotImplementedException($"LIBRARY INFO\n\n{"Something went wrong while processing"}");
                 }
                 catch (Exception exception)
                 {
