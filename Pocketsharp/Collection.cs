@@ -24,6 +24,12 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(authToken))
                     throw new NotImplementedException("Auth token is required");
 
+                if (string.IsNullOrEmpty(targetCollection))
+                    throw new NotImplementedException("A target collection is required");
+
+                if (collectionEntrys == null)
+                    throw new NotImplementedException("A valid object is required");
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
@@ -59,6 +65,9 @@ namespace Pocketsharp
 
                 if (string.IsNullOrEmpty(authToken))
                     throw new NotImplementedException("Auth token is required");
+
+                if (string.IsNullOrEmpty(targetCollection))
+                    throw new NotImplementedException("Target collection is required");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
@@ -104,12 +113,19 @@ namespace Pocketsharp
                 if (string.IsNullOrEmpty(authToken))
                     throw new NotImplementedException("Auth token is required");
 
+                if (string.IsNullOrEmpty(targetCollection))
+                    throw new NotImplementedException("Target collection is required");
+
+                if (string.IsNullOrEmpty(entryId))
+                    throw new NotImplementedException("Entry ID required");
+
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records/{entryId}";
                 var response = await client.GetAsync(apiEndpoint);
 
-                if (!response.IsSuccessStatusCode) throw new Exception(response.StatusCode.ToString());
+                if (!response.IsSuccessStatusCode) 
+                    throw new Exception(response.StatusCode.ToString());
 
                 var responseBody = await response.Content.ReadAsStringAsync();
 
