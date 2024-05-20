@@ -5,158 +5,50 @@ Pocketsharp is a C# library for Pocketbase integration.
 
 # How to use Pocketsharp
 
-- Import the Pocketsharp.dll reference
-  - [Microsoft how to use the reference manager](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-add-or-remove-references-by-using-the-reference-manager?view=vs-2022)
+- Import the Pocketsharp.dll reference [Microsoft how to use the reference manager](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-add-or-remove-references-by-using-the-reference-manager?view=vs-2022)
 
 <br>
 
-- Add the using directive
+- Add using directive
 ```csharp
     using Pocketsharp
 ```
+
 <br>
 
-- Access the objects
+- Access methods
 ```csharp
-    PocketsharpObjects.AuthRecord authRecord = new();
-    PocketsharpObjects.AuthResponse authResponse = new();
+    string response = Pocketsharp.Authentication.EmailAndPassword.RegisterAsync(HttpClient client, Record record, string password, string passwordConfirm);
+    string response = Pocketsharp.Authentication.EmailAndPassword.LoginAsync(HttpClient client, string email, string password);
+
+    byte[] response = Pocketsharp.User.DownloadAvatar(HttpClient client, Response authResponse);
+    string response = Pocketsharp.User.UpdateAsync(HttpClient client, Response authResponse, string? oldPassword = null, string? newPassword = null, string? passwordConfirm = null);
+    bool response = Pocketsharp.User.DeleteAsync(HttpClient client, string recordId, string token);
+
+    string response = Pocketsharp.Collection.CreateEntry(HttpClient client, string authToken, string targetCollection, object userObject);
+    JsonNode response = Pocketsharp.Collection.GetAllEntrysFromTarget(HttpClient client, string authToken, string targetCollection);
+    string response = Pocketsharp.Collection.GetSpecificEntryFromTarget(HttpClient client, string authToken, string targetCollection, string entryId);
 ```
 
 <br>
 
-- Access the methods
+- Access objects
 ```csharp
-    PocketsharpMethods.RegisterWithPasswordAsync(HttpClient client, AuthRecord record, string password, string passwordConfirm)
-    PocketsharpMethods.LoginWithPasswordAsync(HttpClient client, string identity, string password)
-    PocketsharpMethods.UpdateUserAsync(HttpClient client, AuthResponse authResponse, string ? oldPaddword = null, string? password = null, string? passwordConfirm = null)
-    PocketsharpMethods.DeleteUserAsync(HttpClient client,string recordId, string token)
+    Pocketsharp.Objects.Record record = new();
+    Pocketsharp.Objects.Response response = new();
+```
+
+<br>
+
+- Access helper methods
+```csharp
+    public static string SerializeRecordToJson(Record? record);
+    public static Record? DeserializeJsonToRecord(string json);
+
+    public static string SerializeResponseToJson(Response? response);
+    public static Response? DeserializeJsonToResponse(string json);
 ```
 
 <br>
 
 # Example
-
-```csharp
-    // create a client instance
-    HttpClient client = new()
-    {
-        BaseAddress = new Uri("your_baseAdress")
-    };
-
-
-    // create an auth record
-    PocketsharpObjects.AuthRecord? authRecord = new()
-    {
-        Username = "username",
-        EmailVisibility = true,
-        Email = "youremail@test.com",
-        Name = "name",
-        Avatar = []
-    };
-
-
-    // register and access the returned authRecord
-    PocketsharpObjects.AuthRecord? authRecordResponse = await PocketsharpMethods.RegisterWithPasswordAsync(client, authRecord, password, passwordConfirm);
-
-
-    // login and acess the returned authResponse
-    PocketsharpObjects.AuthResponse? authResponse = await PocketsharpMethods.LoginWithPasswordAsync(client, username, password);
-
-    
-    // change values by accessing the savedResponseObject
-    mysavedResponseObject.Record.Name = "yournewname";
-
-
-    // send the update request and access the update authRecord
-    PocketsharpObjects.AuthRecord? updatedAuthRecordResponse = await PocketsharpMethods.UpdateUserAsync(client, mysavedResponseObject);
-
-
-    // access user id and token from your auth-response-object
-    bool isDeleted = await PocketsharpMethods.DeleteUserAsync(client, savedAuthResponse.record.id, savedAuthResponse.token);
-```
-
-<br>
-
-# Object references
-## AuthResponse
-```csharp
-    public class AuthResponse
-    {
-        [JsonPropertyName("token")]
-        public string? Token { get; set; }
-
-        [JsonPropertyName("record")]
-        public AuthRecord? Record { get; set; }
-    }
-```
-## AuthRecord
-```csharp
-    public class AuthRecord
-    {
-        [JsonPropertyName("id")]
-        public string? Id { get; set; }
-
-        [JsonPropertyName("collectionId")]
-        public string? CollectionId { get; set; }
-
-        [JsonPropertyName("collectionName")]
-        public string? CollectionName { get; set; }
-
-        [JsonPropertyName("username")]
-        public string? Username { get; set; }
-
-        [JsonPropertyName("verified")]
-        public bool? Verified { get; set; }
-
-        [JsonPropertyName("emailVisibility")]
-        public bool? EmailVisibility { get; set; }
-
-        [JsonPropertyName("email")]
-        public string? Email { get; set; }
-
-        [JsonPropertyName("created")]
-        [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Created { get; set; }
-
-        [JsonPropertyName("updated")]
-        [JsonConverter(typeof(JsonDateTimeConverter))]
-        public DateTime? Updated { get; set; }
-
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        [JsonPropertyName("avatar")]
-        public byte[]? Avatar { get; set; }
-    }
-
-    // make sure date time get converted correctly
-    internal class JsonDateTimeConverter : JsonConverter<DateTime?>
-    {
-        public override DateTime? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            if (reader.TokenType == JsonTokenType.Null)
-            {
-                return null;
-            }
-
-            if (reader.TokenType == JsonTokenType.String && DateTime.TryParse(reader.GetString(), out var dateTime))
-            {
-                return dateTime;
-            }
-
-            throw new JsonException($"Unable to parse '{reader.GetString()}' as DateTime.");
-        }
-
-        public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
-        {
-            if (value.HasValue)
-            {
-                writer.WriteStringValue(value.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"));
-            }
-            else
-            {
-                writer.WriteNullValue();
-            }
-        }
-    }
-```
