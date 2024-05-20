@@ -35,7 +35,7 @@ namespace Pocketsharp.Objects
         public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("avatar")]
-        public string Avatar { get; set; } = string.Empty;
+        public string AvatarFilename { get; set; } = string.Empty;
 
         public byte[] AvatarByte { get; set; } = [];
     }

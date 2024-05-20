@@ -14,20 +14,21 @@ namespace Pocketsharp
         /// <param name="filename"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public static async Task<byte[]> DownloadAvatar(HttpClient client, Response authResponse, string filename)
+        public static async Task<byte[]> DownloadAvatar(HttpClient client, Response authResponse)
         {
             try
             {
-                if (InputUtility.AvatarDownloadInputIsValid(client, authResponse, filename) == false)
-                    throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
+                if (InputUtility.AvatarDownloadInputIsValid(client, authResponse) == false)
+                    throw new NotImplementedException($"LIBRARY ERROR AVATAR\n\n{"Input is not valid"}");
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authResponse.Token);
 
-                string apiEndpoint = $"/api/files/{authResponse.Record.CollectionId}/{authResponse.Record.Id}/{filename}";
+                string apiEndpoint = $"/api/files/{authResponse.Record.CollectionId}/{authResponse.Record.Id}/{authResponse.Record.AvatarFilename}";
                 var response = await client.GetAsync(apiEndpoint);
+
                 byte[] imageBytes = await response.Content.ReadAsByteArrayAsync();
 
-                if (imageBytes.Length > 0) return imageBytes;
+                if (imageBytes.Length != 0) return imageBytes;
                 else throw new NotImplementedException($"LIBRARY INFO\n\n{"Avatar download gracefully failed"}");
             }
             catch (Exception exception)
@@ -50,7 +51,7 @@ namespace Pocketsharp
             try
             {
                 if (InputUtility.UpdateInputIsValid(client, authResponse) == false)
-                    throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
+                    throw new NotImplementedException($"LIBRARY ERROR UPDATE\n\n{"Input is not valid"}");
 
                 using var content = new MultipartFormDataContent
                     {
@@ -67,7 +68,7 @@ namespace Pocketsharp
                             "name"},
                     };
 
-                if (authResponse.Record.Avatar.Length != 0)
+                if (authResponse.Record.AvatarFilename.Length != 0)
                     content.Add(new ByteArrayContent(authResponse.Record.AvatarByte ?? []), "avatar", $"{authResponse.Record.Id}_avatar.png");
 
                 if (oldPassword != null)

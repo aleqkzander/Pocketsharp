@@ -35,7 +35,7 @@ namespace Pocketsharp.Utility
             return true;
         }
 
-        public static bool AvatarDownloadInputIsValid(HttpClient client, Response response, string filename)
+        public static bool AvatarDownloadInputIsValid(HttpClient client, Response response)
         {
             if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
                 throw new NotImplementedException("Setup the base address on the client");
@@ -46,7 +46,7 @@ namespace Pocketsharp.Utility
             if (string.IsNullOrEmpty(response.Token))
                 throw new NotImplementedException("User Token is not valid");
 
-            if (string.IsNullOrEmpty(filename))
+            if (string.IsNullOrEmpty(response.Record.AvatarFilename))
                 throw new NotImplementedException("Filename is not valid");
 
             return true;

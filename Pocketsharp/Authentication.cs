@@ -25,7 +25,7 @@ namespace Pocketsharp
                 try
                 {
                     if (InputUtility.RegistrationInputIsValid(client, record, password, passwordConfirm) == false)
-                        throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
+                        throw new NotImplementedException($"LIBRARY REGISTER ERROR\n\n{"Input is not valid"}");
 
                     using var content = new MultipartFormDataContent
                     {
@@ -48,9 +48,8 @@ namespace Pocketsharp
                             "passwordConfirm" },
                     };
 
-                    if (record.Avatar.Length != 0)
+                    if (record.AvatarByte.Length != 0)
                         content.Add(new ByteArrayContent(record.AvatarByte ?? []), "avatar", $"{record.Id}_avatar.png");
-
 
                     string apiEndpoint = "/api/collections/users/records";
                     var response = await client.PostAsync(apiEndpoint, content);
@@ -77,7 +76,7 @@ namespace Pocketsharp
                 try
                 {
                     if (InputUtility.LoginInputIsValid(client, email, password) == false)
-                        throw new NotImplementedException($"LIBRARY ERROR\n\n{"Input is not valid"}");
+                        throw new NotImplementedException($"LIBRARY ERROR LOGIN\n\n{"Input is not valid"}");
 
                     var requestBody = new
                     {
