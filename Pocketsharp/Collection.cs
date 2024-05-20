@@ -34,10 +34,6 @@ namespace Pocketsharp
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
                 var response = await client.PostAsJsonAsync(apiEndpoint, collectionEntrys);
-
-                if (!response.IsSuccessStatusCode) 
-                    throw new NotImplementedException(response.StatusCode.ToString());
-
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
@@ -73,10 +69,6 @@ namespace Pocketsharp
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records";
                 var response = await client.GetAsync(apiEndpoint);
-
-                if (!response.IsSuccessStatusCode) 
-                    throw new NotImplementedException(response.StatusCode.ToString());
-
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(responseBody) == false)
@@ -123,10 +115,6 @@ namespace Pocketsharp
 
                 string apiEndpoint = $"/api/collections/{targetCollection}/records/{entryId}";
                 var response = await client.GetAsync(apiEndpoint);
-
-                if (!response.IsSuccessStatusCode) 
-                    throw new NotImplementedException(response.StatusCode.ToString());
-
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(responseBody) == false) return responseBody;
