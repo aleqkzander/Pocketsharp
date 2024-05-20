@@ -51,5 +51,19 @@ namespace Pocketsharp.Utility
 
             return true;
         }
+
+        public static bool UpdateInputIsValid(HttpClient client, Response response)
+        {
+            if (string.IsNullOrEmpty(client.BaseAddress?.ToString()))
+                throw new NotImplementedException("Setup the base address on the client");
+
+            if (string.IsNullOrEmpty(response.Record.Email))
+                throw new NotImplementedException("An email is always required as it is users identity");
+
+            if (string.IsNullOrEmpty(response.Token))
+                throw new NotImplementedException("A token is required for authorization");
+
+            return true;
+        }
     }
 }
